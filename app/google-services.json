@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "771719673142",
+    "firebase_url": "https://ecommunicate-5a295.firebaseio.com",
+    "project_id": "ecommunicate-5a295",
+    "storage_bucket": "ecommunicate-5a295.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771719673142:android:0eced75a513da4f4",
+        "android_client_info": {
+          "package_name": "ch.ecommunicate.amlevin.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771719673142-m79g38dtd2rfoph6l4epoon7ir6qgsv8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKx1cmVkcLJJ8M9KzuNOLAgvo-sBUaTd8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771719673142:android:ff5a4972dd4345a3",
+        "android_client_info": {
+          "package_name": "ch.ecommunicate.email"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771719673142-m79g38dtd2rfoph6l4epoon7ir6qgsv8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKx1cmVkcLJJ8M9KzuNOLAgvo-sBUaTd8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
