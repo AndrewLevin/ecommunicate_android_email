@@ -7,6 +7,40 @@
     android:fitsSystemWindows="true"
     tools:context="ch.ecommunicate.email.EmailsActivity">
 
-    <include layout="@layout/content_emails" />
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="49dp">
+
+            <Button
+                android:id="@+id/sent_messages"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:layout_marginRight="0dp"
+                android:text="Sent Messages"
+                app:layout_anchorGravity="top|right"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <Button
+                android:id="@+id/compose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|left"
+                android:text="Compose" />
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_emails" />
+
 
 </android.support.design.widget.CoordinatorLayout>

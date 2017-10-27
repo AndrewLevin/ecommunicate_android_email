@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -35,6 +36,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import static ch.ecommunicate.email.R.id.sent_messages;
 
 /**
  * Created by amlevin on 8/25/2017.
@@ -122,6 +125,19 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
 
         email_listview.setOnItemClickListener(this);
 
+        final Button button = (Button)findViewById(R.id.compose);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent in = new Intent(EmailsActivity.this, ComposeActivity.class);
+
+                in.putExtra("id_token", mIDToken);
+
+                startActivity(in);
+
+            }
+        });
+
     }
 
 
@@ -164,6 +180,7 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
             Integer result = 0;
 
             try {
+
                 URL url = new URL("https://email.android.ecommunicate.ch:443/receivedemails/");
                 urlConnection = (HttpsURLConnection) url.openConnection();
 
@@ -201,6 +218,7 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
                 int statusCode = urlConnection.getResponseCode();
 
                 if (statusCode == 200) {
+
                     inputStream = new BufferedInputStream(urlConnection.getInputStream());
 
                     String response = convertInputStreamToString(inputStream);
@@ -234,6 +252,7 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
 
                 e.printStackTrace();
             }
+
             return result;
         }
 
