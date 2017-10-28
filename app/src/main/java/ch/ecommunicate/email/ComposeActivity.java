@@ -96,7 +96,7 @@ public class ComposeActivity extends AppCompatActivity {
 
                 JSONObject json = new JSONObject();
 
-                json.put("auth_token",id_token);
+                json.put("id_token",id_token);
                 json.put("to",to);
                 json.put("subject",subject);
                 json.put("body",body);

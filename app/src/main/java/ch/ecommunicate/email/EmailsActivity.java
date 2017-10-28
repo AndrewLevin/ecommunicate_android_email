@@ -37,7 +37,6 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import static ch.ecommunicate.email.R.id.sent_messages;
 
 /**
  * Created by amlevin on 8/25/2017.
@@ -45,9 +44,8 @@ import static ch.ecommunicate.email.R.id.sent_messages;
 
 public class EmailsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private String mIDToken;
+    private String id_token;
 
-    private FirebaseAuth mAuth;
 
     private static final String TAG="EmailsActivity";
 
@@ -55,14 +53,17 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
 
     EmailArrayAdapter email_array_adapter;
 
+    private Boolean sent;
+
     public class Email {
+        String to;
         String from;
         String subject;
         String body;
         String date;
         String cc;
         Boolean is_read;
-        String id;
+        String email_id;
     }
 
     List<Email> email_list = null;
@@ -70,6 +71,13 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
     Context context;
 
     public EmailsActivity() {
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        update_emails();
     }
 
     @Override
@@ -112,14 +120,15 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
     protected void onCreate(Bundle savedInstanceState) {
 
         Intent in = getIntent();
-        mIDToken = in.getStringExtra("IDToken");
+        id_token = in.getStringExtra("id_token");
+        sent = in.getBooleanExtra("sent",true);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emails);
 
         context = this;
 
-        email_array_adapter = new EmailArrayAdapter(this, email_list);
+        email_array_adapter = new EmailArrayAdapter(this, email_list, sent);
 
         email_listview = (ListView) findViewById(R.id.emailListView);
 
@@ -131,9 +140,30 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
 
                 Intent in = new Intent(EmailsActivity.this, ComposeActivity.class);
 
-                in.putExtra("id_token", mIDToken);
+                in.putExtra("id_token", id_token);
+                in.putExtra("sent", sent);
 
                 startActivity(in);
+
+            }
+        });
+
+        final Button sent_button = (Button)findViewById(R.id.sent_button);
+        sent_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                sent = true;
+                update_emails();
+
+            }
+        });
+
+        final Button received_button = (Button)findViewById(R.id.received_button);
+        received_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                sent = false;
+                update_emails();
 
             }
         });
@@ -146,11 +176,13 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
 
         Intent mIntent = new Intent(this,ReadOneActivity.class);
         //TextView contact = (TextView) view.findViewById(R.id.contact);
-        mIntent.putExtra("email_id", email_list.get(position).id.toString());
+        mIntent.putExtra("email_id", email_list.get(position).email_id.toString());
 
         //mIntent.putExtra("contact_username",email_list.get(position).username);
         //mIntent.putExtra("contact_name",email_list.get(position).name);
-        mIntent.putExtra("id_token", mIDToken);
+        mIntent.putExtra("id_token", id_token);
+
+        mIntent.putExtra("sent", sent);
         startActivity(mIntent);
 
         //email_list.get(position).new_message = false;
@@ -181,7 +213,7 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
 
             try {
 
-                URL url = new URL("https://email.android.ecommunicate.ch:443/receivedemails/");
+                URL url = new URL("https://email.android.ecommunicate.ch:443/emails/");
                 urlConnection = (HttpsURLConnection) url.openConnection();
 
                 urlConnection.setRequestProperty("Content-Type","application/json");
@@ -199,13 +231,14 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
 
-                JSONObject token_json = new JSONObject();
+                JSONObject json_object = new JSONObject();
 
                 String device_token = FirebaseInstanceId.getInstance().getToken();
 
-                token_json.put("auth_token",mIDToken);
+                json_object.put("id_token",id_token);
+                json_object.put("sent",sent);
 
-                writer.write(token_json.toString());
+                writer.write(json_object.toString());
 
                 writer.flush();
 
@@ -260,7 +293,7 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
 
-            email_array_adapter = new EmailArrayAdapter(context, email_list);
+            email_array_adapter = new EmailArrayAdapter(context, email_list,sent);
 
             email_listview.setAdapter((ListAdapter) email_array_adapter);
 

@@ -18,12 +18,23 @@
             android:layout_height="49dp">
 
             <Button
-                android:id="@+id/sent_messages"
-                android:layout_width="140dp"
+                android:id="@+id/received_button"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:layout_marginRight="127dp"
+                android:text="Received Emails"
+                app:layout_anchorGravity="top|right"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <Button
+                android:id="@+id/sent_button"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|right"
                 android:layout_marginRight="0dp"
-                android:text="Sent Messages"
+                android:text="Sent Emails"
                 app:layout_anchorGravity="top|right"
                 app:layout_constraintRight_toRightOf="parent"
                 tools:layout_editor_absoluteY="0dp" />

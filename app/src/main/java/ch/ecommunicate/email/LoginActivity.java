@@ -180,7 +180,8 @@ public class LoginActivity extends AppCompatActivity {
 
             Intent mIntent = new Intent(LoginActivity.this,EmailsActivity.class);
 
-            mIntent.putExtra("IDToken", id_token);
+            mIntent.putExtra("id_token", id_token);
+            mIntent.putExtra("sent", false);
 
             if (progress_dialog != null) {
                 progress_dialog.dismiss();
@@ -220,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 String device_token = FirebaseInstanceId.getInstance().getToken();
 
-                token_json.put("auth_token",id_token);
+                token_json.put("id_token",id_token);
                 token_json.put("device_token",device_token);
 
                 writer.write(token_json.toString());
@@ -309,7 +310,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                 Intent in = new Intent(LoginActivity.this, EmailsActivity.class);
 
-                                in.putExtra("IDToken", id_token);
+                                in.putExtra("id_token", id_token);
+                                in.putExtra("sent", false);
 
                                 startActivity(in);
 

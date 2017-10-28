@@ -41,12 +41,16 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
 
     private static final String TAG = "ReadOneActivity";
 
+
+
     String email_body;
     String email_subject;
     String email_from;
     String email_cc;
     String email_date;
+    String email_to;
 
+    private Boolean sent;
     private String email_id;
     private String id_token;
     private String contact_username;
@@ -84,6 +88,8 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
 
             TextView from = (TextView)findViewById(R.id.from);
             from.setText(email_from);
+            TextView to = (TextView)findViewById(R.id.to);
+            to.setText(email_to);
             TextView body = (TextView)findViewById(R.id.body);
             body.setText(email_body);
             TextView date = (TextView)findViewById(R.id.date);
@@ -121,12 +127,13 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
 
-                JSONObject json = new JSONObject();
+                JSONObject json_object = new JSONObject();
 
-                json.put("email_id",email_id);
-                json.put("auth_token",id_token);
+                json_object.put("email_id",email_id);
+                json_object.put("sent",sent);
+                json_object.put("id_token",id_token);
 
-                writer.write(json.toString());
+                writer.write(json_object.toString());
 
                 writer.flush();
 
@@ -217,6 +224,7 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
                 email_from = email_json.getString("from");
                 email_date = email_json.getString("date");
                 email_cc = email_json.getString("cc");
+                email_to = email_json.getString("to");
 
             } catch (JSONException e) {
 
@@ -248,6 +256,7 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
         Intent in = getIntent();
         id_token = in.getStringExtra("id_token");
         email_id = in.getStringExtra("email_id");
+        sent = in.getBooleanExtra("sent",false);
 
         new ReadOneActivityAsyncTask1().execute();
 
