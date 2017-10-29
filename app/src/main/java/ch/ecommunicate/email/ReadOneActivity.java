@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -252,6 +253,23 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_readone);
+
+        final Button button = (Button)findViewById(R.id.reply);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent in = new Intent(ReadOneActivity.this, ComposeActivity.class);
+
+                in.putExtra("id_token", id_token);
+                in.putExtra("sent", sent);
+                in.putExtra("email_id",email_id);
+                in.putExtra("reply",true);
+                in.putExtra("sent",sent);
+
+                startActivity(in);
+
+            }
+        });
 
         Intent in = getIntent();
         id_token = in.getStringExtra("id_token");

@@ -87,7 +87,7 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
                 new IntentFilter("new_email")
         );
 
-        update_emails();
+        //update_emails();
     }
 
     @Override
