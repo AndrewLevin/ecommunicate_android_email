@@ -100,7 +100,6 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
         @Override
         public void onReceive(Context context, Intent intent) {
             //new Chat.ChatAsyncTask1().execute();
-            Log.d(TAG,intent.getExtras().getString("contact"));
 
             update_emails();
 

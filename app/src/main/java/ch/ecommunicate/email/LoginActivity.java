@@ -75,7 +75,18 @@ public class LoginActivity extends AppCompatActivity {
 
                                             id_token = task.getResult().getToken();
 
-                                            new LoginActivityAsyncTask2().execute();
+                                            new RegisterDevice().execute();
+
+                                            Intent mIntent = new Intent(LoginActivity.this,EmailsActivity.class);
+
+                                            mIntent.putExtra("id_token", id_token);
+                                            mIntent.putExtra("sent", false);
+
+                                            if (progress_dialog != null) {
+                                                progress_dialog.dismiss();
+                                            }
+
+                                            startActivity(mIntent);
 
                                         } else {
                                         }
@@ -145,107 +156,6 @@ public class LoginActivity extends AppCompatActivity {
                     while ((line=br.readLine()) != null) {
                         response+=line;
                     }
-
-                } else {
-
-                }
-            }
-            catch (Exception e) {
-
-                if (e.getMessage() != null) {
-                    Log.d(TAG, e.getMessage());
-                }
-
-                if (e.getLocalizedMessage() != null) {
-                    Log.d(TAG, e.getLocalizedMessage());
-                }
-
-                if (e.getCause() != null) {
-                    Log.d(TAG, e.getCause().toString());
-                }
-
-                e.printStackTrace();
-            }
-
-            return response;
-        }
-    }
-
-    public class LoginActivityAsyncTask2 extends AsyncTask<String, Void, String> {
-
-        private static final String TAG = "LoginActivityAsyncTask2";
-
-        @Override
-        protected void onPostExecute(String string) {
-
-            Intent mIntent = new Intent(LoginActivity.this,EmailsActivity.class);
-
-            mIntent.putExtra("id_token", id_token);
-            mIntent.putExtra("sent", false);
-
-            if (progress_dialog != null) {
-                progress_dialog.dismiss();
-            }
-
-            startActivity(mIntent);
-
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            InputStream inputStream = null;
-            HttpsURLConnection urlConnection = null;
-
-            String response = "";
-
-            try {
-
-                URL url = new URL("https://email.android.ecommunicate.ch:443/registerdevice/");
-
-                urlConnection = (HttpsURLConnection) url.openConnection();
-
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-
-                urlConnection.setRequestProperty("Accept", "application/json");
-
-                urlConnection.setDoInput(true);
-
-                urlConnection.setDoOutput(true);
-
-                OutputStream os = urlConnection.getOutputStream();
-
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-
-                JSONObject token_json = new JSONObject();
-
-                String device_token = FirebaseInstanceId.getInstance().getToken();
-
-                token_json.put("id_token",id_token);
-                token_json.put("device_token",device_token);
-
-                writer.write(token_json.toString());
-
-                writer.flush();
-
-                writer.close();
-
-                os.close();
-
-                urlConnection.setRequestMethod("POST");
-
-                urlConnection.connect();
-
-                int statusCode = urlConnection.getResponseCode();
-
-                if (statusCode == 200) {
-
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                    while ((line=br.readLine()) != null) {
-                        response+=line;
-                    }
-
 
                 } else {
 
