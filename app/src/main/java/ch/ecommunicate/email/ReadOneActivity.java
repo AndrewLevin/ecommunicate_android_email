@@ -50,6 +50,7 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
     String email_cc;
     String email_date;
     String email_to;
+    String email_attachments;
 
     private Boolean sent;
     private String email_id;
@@ -97,6 +98,8 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
             date.setText(email_date);
             TextView subject = (TextView)findViewById(R.id.subject);
             subject.setText(email_subject);
+            TextView attachments = (TextView)findViewById(R.id.attachments);
+            attachments.setText(email_attachments);
 
 
 
@@ -226,6 +229,12 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
                 email_date = email_json.getString("date");
                 email_cc = email_json.getString("cc");
                 email_to = email_json.getString("to");
+
+                if (email_json.getJSONArray("attachments").length() > 0) {
+
+                    email_attachments = ((JSONObject) email_json.getJSONArray("attachments").get(0)).getString("filename");
+
+                }
 
             } catch (JSONException e) {
 
