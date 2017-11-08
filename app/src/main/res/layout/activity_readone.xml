@@ -22,10 +22,10 @@
         android:id="@+id/to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:layout_below="@id/from"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@id/from"
+        android:text=""
         android:textSize="18sp" />
 
     <TextView
@@ -48,15 +48,13 @@
         android:text=""
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/attachments"
+    <Button
+        android:id="@+id/attachment1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@id/subject"
         android:text=""
-        android:textSize="18sp" />
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/body"
@@ -64,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/attachments"
+        android:layout_below="@id/attachment1"
         android:text=""
         android:textSize="18sp" />
 
