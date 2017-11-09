@@ -1,9 +1,11 @@
 package ch.ecommunicate.email;
 
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -102,85 +104,16 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
 
             try {
 
-                URL url = new URL("https://email.android.ecommunicate.ch:443/downloadattachment/");
-                urlConnection = (HttpsURLConnection) url.openConnection();
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse("https://email.android.ecommunicate.ch:443/downloadattachment/?sent=\""+sent+"\"&&email_id=\""+email_id+"\"&&attachment_id=\""+attachment_id+"\""));
 
-                urlConnection.setRequestProperty("Content-Type","application/json");
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
 
-                urlConnection.setRequestProperty("Accept","application/json");
+                request.addRequestHeader("Authorization",id_token);
 
-                urlConnection.setRequestMethod("POST");
+                DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 
-                urlConnection.setDoInput(true);
+                manager.enqueue(request);
 
-                urlConnection.setDoOutput(true);
-
-                OutputStream os1 = urlConnection.getOutputStream();
-
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os1, "UTF-8"));
-
-                JSONObject json_object = new JSONObject();
-
-                json_object.put("attachment_id",attachment_id);
-                json_object.put("email_id",email_id);
-                json_object.put("id_token",id_token);
-                json_object.put("sent",sent);
-
-                writer.write(json_object.toString());
-
-                writer.flush();
-
-                writer.close();
-
-                urlConnection.connect();
-
-                int statusCode = urlConnection.getResponseCode();
-
-                if (statusCode == 200) {
-                    InputStream is = new BufferedInputStream(urlConnection.getInputStream(), 16384);
-
-                    Log.d(TAG,"andrew debug 1");
-
-                    OutputStream os2 = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/" + filename);
-
-                    Log.d(TAG,"andrew debug 2");
-
-                    byte data[] = new byte[1024];
-
-                    Log.d(TAG,"andrew debug 3");
-
-                    while (true) {
-
-                        Log.d(TAG,"andrew debug 4");
-
-                        int return_value = is.read(data);
-
-                        Log.d(TAG,"andrew debug 5");
-
-                        if (return_value == -1)
-                            break;
-
-                        Log.d(TAG,"andrew debug 6");
-
-                        os2.write(data, 0, return_value);
-
-                        Log.d(TAG,"andrew debug 6");
-                    }
-
-                    os2.flush();
-
-                    os2.close();
-
-                    is.close();
-
-                    result = 1;
-
-                } else {
-
-                    result = 0;
-
-                }
             }
             catch (Exception e) {
 
