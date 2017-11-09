@@ -37,6 +37,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -169,7 +171,31 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
             TextView body = (TextView)findViewById(R.id.body);
             body.setText(email_body);
             TextView date = (TextView)findViewById(R.id.date);
-            date.setText(email_date);
+
+            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            SimpleDateFormat format2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
+            try {
+                date.setText(format2.format(format1.parse(email_date)));
+
+            } catch (ParseException e) {
+
+                if (e.getMessage() != null) {
+                    Log.d(TAG, e.getMessage());
+                }
+
+                if (e.getLocalizedMessage() != null) {
+                    Log.d(TAG, e.getLocalizedMessage());
+                }
+
+                if (e.getCause() != null) {
+                    Log.d(TAG, e.getCause().toString());
+                }
+
+                e.printStackTrace();
+
+            }
+
+            //date.setText(email_date);
             TextView subject = (TextView)findViewById(R.id.subject);
             subject.setText(email_subject);
             Button attachment1 = (Button)findViewById(R.id.attachment1);

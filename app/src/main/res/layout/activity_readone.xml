@@ -15,6 +15,10 @@
         android:id="@+id/from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="20px"
+        android:layout_toEndOf="@+id/from_colon"
+        android:layout_toRightOf="@+id/from_colon"
         android:text=""
         android:textSize="18sp" />
 
@@ -22,9 +26,11 @@
         android:id="@+id/to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/from"
+        android:layout_alignBaseline="@+id/to_colon"
+        android:layout_alignBottom="@+id/to_colon"
+        android:layout_marginLeft="20px"
+        android:layout_toEndOf="@+id/to_colon"
+        android:layout_toRightOf="@+id/to_colon"
         android:text=""
         android:textSize="18sp" />
 
@@ -32,9 +38,11 @@
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/to"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignBaseline="@+id/date_colon"
+        android:layout_alignBottom="@+id/date_colon"
+        android:layout_marginLeft="20px"
+        android:layout_toEndOf="@+id/date_colon"
+        android:layout_toRightOf="@+id/date_colon"
         android:text=""
         android:textSize="18sp" />
 
@@ -42,9 +50,11 @@
         android:id="@+id/subject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/date"
+        android:layout_alignBaseline="@+id/subject_colon"
+        android:layout_alignBottom="@+id/subject_colon"
+        android:layout_marginLeft="20px"
+        android:layout_toEndOf="@+id/subject_colon"
+        android:layout_toRightOf="@+id/subject_colon"
         android:text=""
         android:textSize="18sp" />
 
@@ -74,6 +84,50 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="Reply" />
+
+    <TextView
+        android:id="@+id/from_colon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="From:"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/to_colon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/from_colon"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="To:"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/date_colon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/to_colon"
+        android:text="Date:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/subject_colon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/date_colon"
+        android:text="Subject:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>
