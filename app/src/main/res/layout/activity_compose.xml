@@ -10,6 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/to" />
+
+    <EditText
+        android:id="@+id/compose_cc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Cc" />
+
     <EditText
         android:id="@+id/compose_subject"
         android:layout_width="match_parent"

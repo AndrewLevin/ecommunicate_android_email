@@ -58,8 +58,9 @@ public class ComposeActivity extends AppCompatActivity {
                 EditText subject_edittext = (EditText) findViewById(R.id.compose_subject);
                 EditText body_edittext = (EditText) findViewById(R.id.compose_body);
                 EditText to_edittext = (EditText) findViewById(R.id.compose_to);
+                EditText cc_edittext = (EditText) findViewById(R.id.compose_cc);
 
-                new ComposeActivityAsyncTask1().execute(to_edittext.getText().toString(), subject_edittext.getText().toString(),body_edittext.getText().toString());
+                new ComposeActivityAsyncTask1().execute(to_edittext.getText().toString(), cc_edittext.getText().toString(), subject_edittext.getText().toString(),body_edittext.getText().toString());
 
             }
         });
@@ -84,6 +85,9 @@ public class ComposeActivity extends AppCompatActivity {
 
             EditText to = (EditText)findViewById(R.id.compose_to);
             to.setText(reply_to);
+
+            EditText cc = (EditText)findViewById(R.id.compose_cc);
+            cc.setText(reply_cc);
 
             EditText subject = (EditText)findViewById(R.id.compose_subject);
             subject.setText(reply_subject);
@@ -217,8 +221,9 @@ public class ComposeActivity extends AppCompatActivity {
             HttpsURLConnection urlConnection = null;
             Integer result = 0;
             String to = strings[0];
-            String subject = strings[1];
-            String body = strings[2];
+            String cc = strings[1];
+            String subject = strings[2];
+            String body = strings[3];
 
             try {
 
@@ -244,6 +249,7 @@ public class ComposeActivity extends AppCompatActivity {
 
                 json.put("id_token",id_token);
                 json.put("to",to);
+                json.put("cc",cc);
                 json.put("subject",subject);
                 json.put("body",body);
 
