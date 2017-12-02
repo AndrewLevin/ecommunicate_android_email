@@ -3,6 +3,7 @@ package ch.ecommunicate.email;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,19 +55,56 @@ public class ComposeActivity extends AppCompatActivity {
         email_id = in.getStringExtra("email_id");
         sent = in.getBooleanExtra("sent",false);
 
-        if (reply)
-            new ComposeActivityAsyncTask2().execute(email_id);
+        if (reply) {
+
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+
+            FirebaseUser user = auth.getCurrentUser();
+
+            user.getToken(false)
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+
+                            if (task.isSuccessful()) {
+
+                                id_token = task.getResult().getToken();
+
+                                new ComposeActivityAsyncTask2().execute(email_id);
+
+                            }
+                        }
+                    });
+
+        }
 
         final Button button = (Button)findViewById(R.id.send);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                EditText subject_edittext = (EditText) findViewById(R.id.compose_subject);
-                EditText body_edittext = (EditText) findViewById(R.id.compose_body);
-                EditText to_edittext = (EditText) findViewById(R.id.compose_to);
-                EditText cc_edittext = (EditText) findViewById(R.id.compose_cc);
+                final EditText subject_edittext = (EditText) findViewById(R.id.compose_subject);
+                final EditText body_edittext = (EditText) findViewById(R.id.compose_body);
+                final EditText to_edittext = (EditText) findViewById(R.id.compose_to);
+                final EditText cc_edittext = (EditText) findViewById(R.id.compose_cc);
 
-                new ComposeActivityAsyncTask1().execute(to_edittext.getText().toString(), cc_edittext.getText().toString(), subject_edittext.getText().toString(),body_edittext.getText().toString());
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+
+                FirebaseUser user = auth.getCurrentUser();
+
+                user.getToken(false)
+                        .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                            public void onComplete(@NonNull Task<GetTokenResult> task) {
+
+                                if (task.isSuccessful()) {
+
+                                    id_token = task.getResult().getToken();
+
+                                    new ComposeActivityAsyncTask1().execute(to_edittext.getText().toString(), cc_edittext.getText().toString(), subject_edittext.getText().toString(),body_edittext.getText().toString());
+
+                                }
+                            }
+                        });
+
+
 
             }
         });

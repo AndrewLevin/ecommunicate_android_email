@@ -26,11 +26,14 @@ import javax.net.ssl.HttpsURLConnection;
  * Created by amlevin on 8/17/2017.
  */
 
+
+
 public class RegisterDevice extends AsyncTask<String, Void, String> {
 
     private static final String TAG = "RegisterDevice";
 
     private String device_token = "";
+
     private String id_token = "";
 
     @Override
@@ -103,8 +106,6 @@ public class RegisterDevice extends AsyncTask<String, Void, String> {
 
                 urlConnection.setRequestMethod("POST");
 
-                Log.d(TAG,"andrew debug 5");
-
                 urlConnection.connect();
 
                 int statusCode = urlConnection.getResponseCode();
@@ -142,7 +143,5 @@ public class RegisterDevice extends AsyncTask<String, Void, String> {
 
         };
 
-    }
-
-
+    };
 }

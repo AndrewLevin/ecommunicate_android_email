@@ -7,10 +7,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,8 +21,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -47,18 +50,35 @@ public class LoginActivity extends AppCompatActivity {
     ProgressDialog progress_dialog;
 
 
-    public class LoginActivityAsyncTask1 extends AsyncTask<String, Void, String> {
+    public class LoginAndGetIDToken extends AsyncTask<String, Void, String> {
 
-        private static final String TAG = "LoginActivityAsyncTask1";
+        private static final String TAG = "LoginActivityAsyncTask";
+
+        String custom_token = "";
 
 
+        @Override
+        protected void onPreExecute(){
+
+            //doing just progress_dialog.show(...) leads to null pointer exceptions when progress_dialog.dismiss is called later
+            progress_dialog = ProgressDialog.show(context, "","Authenticating");
+
+        }
 
         @Override
         protected void onPostExecute(String string) {
 
-            custom_token = string;
+            if (string == "false") {
 
-            Log.d(TAG,custom_token);
+                if (progress_dialog != null) {
+                    progress_dialog.dismiss();
+                }
+
+                TextView tv = (TextView) findViewById(R.id.loginerrors);
+                tv.setText("Login unsuccessful");
+
+                return;
+            }
 
             auth.signInWithCustomToken(custom_token).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                 @Override
@@ -77,18 +97,26 @@ public class LoginActivity extends AppCompatActivity {
 
                                             new RegisterDevice().execute();
 
-                                            Intent mIntent = new Intent(LoginActivity.this,EmailsActivity.class);
+                                            Intent intent = new Intent(LoginActivity.this,EmailsActivity.class);
 
-                                            mIntent.putExtra("id_token", id_token);
-                                            mIntent.putExtra("sent", false);
+                                            intent.putExtra("sent", false);
 
                                             if (progress_dialog != null) {
                                                 progress_dialog.dismiss();
                                             }
 
-                                            startActivity(mIntent);
+                                            startActivity(intent);
 
                                         } else {
+
+                                            if (progress_dialog != null) {
+                                                progress_dialog.dismiss();
+                                            }
+
+                                            TextView tv = (TextView) findViewById(R.id.loginerrors);
+                                            tv.setText("Login unsuccessful");
+
+                                            return;
                                         }
                                     }
                                 });
@@ -104,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(String... username_and_password) {
             InputStream inputStream = null;
             HttpsURLConnection urlConnection = null;
-
+            JSONObject json_object = null;
             String response = "";
 
             try {
@@ -157,7 +185,30 @@ public class LoginActivity extends AppCompatActivity {
                         response+=line;
                     }
 
+                    try {
+
+                        json_object = new JSONObject(response);
+
+                    } catch (JSONException e) {
+
+                        if (e.getMessage() != null) {
+                            Log.d(TAG, e.getMessage());
+                        }
+
+                        if (e.getLocalizedMessage() != null) {
+                            Log.d(TAG, e.getLocalizedMessage());
+                        }
+
+                        if (e.getCause() != null) {
+                            Log.d(TAG, e.getCause().toString());
+                        }
+
+                        e.printStackTrace();
+                    }
+
                 } else {
+
+
 
                 }
             }
@@ -178,7 +229,38 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            return response;
+            if (json_object != null){
+
+                try {
+                    if(json_object.getBoolean("success")){
+
+                        custom_token = json_object.getString("custom_token");
+
+                        return "true";
+                    }
+
+                } catch (JSONException e) {
+
+                    if (e.getMessage() != null) {
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                    if (e.getLocalizedMessage() != null) {
+                        Log.d(TAG, e.getLocalizedMessage());
+                    }
+
+                    if (e.getCause() != null) {
+                        Log.d(TAG, e.getCause().toString());
+                    }
+
+                    e.printStackTrace();
+
+                    return "false";
+                }
+
+            }
+
+            return "false";
         }
     }
 
@@ -206,7 +288,7 @@ public class LoginActivity extends AppCompatActivity {
             //doing just progress_dialog.show(...) leads to null pointer exceptions when progress_dialog.dismiss is called later
             progress_dialog = ProgressDialog.show(context, "","Authenticating");
 
-            user.getToken(true)
+            user.getToken(false)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                         public void onComplete(@NonNull Task<GetTokenResult> task) {
 
@@ -220,7 +302,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                 Intent in = new Intent(LoginActivity.this, EmailsActivity.class);
 
-                                in.putExtra("id_token", id_token);
                                 in.putExtra("sent", false);
 
                                 startActivity(in);
@@ -237,6 +318,11 @@ public class LoginActivity extends AppCompatActivity {
 
             setContentView(R.layout.activity_login);
 
+            TextView tv = (TextView) findViewById(R.id.register);
+            tv.setText(Html.fromHtml("Register at <a href=\"https://ecommunicate.ch/register/\">ecommunicate.ch</a>"));
+            tv.setLinksClickable(true);
+            tv.setMovementMethod(LinkMovementMethod.getInstance());
+
             Button btnRegister = (Button) findViewById(R.id.btnLogin);
             btnRegister.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -250,7 +336,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     String passwordString = editPassword.getText().toString();
 
-                    new LoginActivityAsyncTask1().execute(usernameString, passwordString);
+                    new LoginAndGetIDToken().execute(usernameString, passwordString);
                 }
 
             });

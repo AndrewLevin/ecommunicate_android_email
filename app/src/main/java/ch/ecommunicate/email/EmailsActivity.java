@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,7 +17,11 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,7 +50,6 @@ import javax.net.ssl.HttpsURLConnection;
 public class EmailsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private String id_token;
-
 
     private static final String TAG="EmailsActivity";
 
@@ -111,7 +115,23 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
 
     void update_emails() {
 
-        new EmailsProcessor().execute();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = auth.getCurrentUser();
+
+        user.getToken(false)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+
+                        if (task.isSuccessful()) {
+
+                            id_token = task.getResult().getToken();
+
+                            new EmailsProcessor().execute();
+
+                        }
+                    }
+                });
 
     }
 
@@ -120,7 +140,7 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
 
         Intent in = getIntent();
         id_token = in.getStringExtra("id_token");
-        sent = in.getBooleanExtra("sent",true);
+        sent = in.getBooleanExtra("sent",false);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emails);
@@ -139,7 +159,6 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
 
                 Intent in = new Intent(EmailsActivity.this, ComposeActivity.class);
 
-                in.putExtra("id_token", id_token);
                 in.putExtra("sent", sent);
 
                 startActivity(in);
@@ -176,10 +195,6 @@ public class EmailsActivity extends AppCompatActivity implements AdapterView.OnI
         Intent mIntent = new Intent(this,ReadOneActivity.class);
         //TextView contact = (TextView) view.findViewById(R.id.contact);
         mIntent.putExtra("email_id", email_list.get(position).email_id.toString());
-
-        //mIntent.putExtra("contact_username",email_list.get(position).username);
-        //mIntent.putExtra("contact_name",email_list.get(position).name);
-        mIntent.putExtra("id_token", id_token);
 
         mIntent.putExtra("sent", sent);
         startActivity(mIntent);

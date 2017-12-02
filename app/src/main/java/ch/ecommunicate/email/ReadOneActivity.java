@@ -5,11 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +26,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +54,10 @@ import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ReadOneActivity extends AppCompatActivity implements View.OnClickListener {
+public class ReadOneActivity extends AppCompatActivity implements View.OnClickListener  {
+
+
+    private static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
 
     private static final String TAG = "ReadOneActivity";
 
@@ -87,6 +100,14 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
     public class ReadOneActivityAsyncTask2 extends AsyncTask<String, Void, Integer> {
 
         private static final String TAG = "ReadOneActivity";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+
 
         @Override
         protected void onPostExecute(Integer result) {
@@ -211,9 +232,57 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
                 attachment1.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
-                        Button button = (Button) v;
+                        final Button button = (Button) v;
 
-                        new ReadOneActivityAsyncTask2().execute((String) button.getTag(), (String) button.getText());
+                        if (ContextCompat.checkSelfPermission(ReadOneActivity.this,
+
+                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+
+                            // Should we show an explanation?
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(ReadOneActivity.this,
+                                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                                // Show an explanation to the user *asynchronously* -- don't block
+                                // this thread waiting for the user's response! After the user
+                                // sees the explanation, try again to request the permission.
+
+                            } else {
+
+                                // No explanation needed, we can request the permission.
+
+                                ActivityCompat.requestPermissions(ReadOneActivity.this,
+                                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                        PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+                                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                                // app-defined int constant. The callback method gets the
+                                // result of the request.
+                            }
+                        } else {
+
+                            FirebaseAuth auth = FirebaseAuth.getInstance();
+
+                            FirebaseUser user = auth.getCurrentUser();
+
+                            user.getToken(false)
+                                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+
+                                            if (task.isSuccessful()) {
+
+                                                id_token = task.getResult().getToken();
+
+                                                new ReadOneActivityAsyncTask2().execute((String) button.getTag(), (String) button.getText());
+
+                                            }
+                                        }
+                                    });
+
+
+                        }
+
+
 
                     }
                 });
@@ -396,7 +465,6 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
 
                 Intent in = new Intent(ReadOneActivity.this, ComposeActivity.class);
 
-                in.putExtra("id_token", id_token);
                 in.putExtra("sent", sent);
                 in.putExtra("email_id",email_id);
                 in.putExtra("reply",true);
@@ -408,12 +476,26 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         Intent in = getIntent();
-        id_token = in.getStringExtra("id_token");
         email_id = in.getStringExtra("email_id");
         sent = in.getBooleanExtra("sent",false);
 
-        new ReadOneActivityAsyncTask1().execute();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
+        FirebaseUser user = auth.getCurrentUser();
+
+        user.getToken(false)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+
+                        if (task.isSuccessful()) {
+
+                            id_token = task.getResult().getToken();
+
+                            new ReadOneActivityAsyncTask1().execute();
+
+                        }
+                    }
+                });
     }
 
     @Override

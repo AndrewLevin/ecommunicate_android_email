@@ -6,23 +6,6 @@
     android:layout_height="match_parent"
     tools:context="ch.ecommunicate.email.LoginActivity">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:text="Register at ecommunicate.ch"
-        android:textSize="18sp"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginTop="46dp"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.437" />
-
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
@@ -51,7 +34,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/enterUsernameView" />
 
     <EditText
         android:id="@+id/passwordText"
@@ -66,10 +49,10 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/enterUsernameView" />
+        app:layout_constraintTop_toBottomOf="@+id/enterPasswordView" />
 
     <TextView
-        android:id="@+id/enterUsernameView"
+        android:id="@+id/enterPasswordView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enter password:"
@@ -83,17 +66,51 @@
         app:layout_constraintTop_toBottomOf="@+id/usernameText" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/enterUsernameView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enter username:"
         android:textSize="24sp"
         tools:layout_constraintTop_creator="1"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="51dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="@+id/usernameText"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="21dp" />
+
+    <TextView
+        android:id="@+id/loginerrors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        android:text=""
+        android:textAllCaps="false"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1" />
+
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="18sp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/enterUsernameView" />
+
 
 </android.support.constraint.ConstraintLayout>
