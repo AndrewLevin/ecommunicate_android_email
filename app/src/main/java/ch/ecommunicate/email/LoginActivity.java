@@ -268,7 +268,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
 
-        this.finish();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = auth.getCurrentUser();
+
+        if (user != null) {
+
+            this.finish();
+
+        }
     }
 
     @Override
