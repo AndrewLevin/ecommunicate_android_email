@@ -419,6 +419,13 @@ public class ReadOneActivity extends AppCompatActivity implements View.OnClickLi
                 email_cc = email_json.getString("cc");
                 email_to = email_json.getString("to");
 
+                Log.d(TAG,email_body);
+                Log.d(TAG,email_subject);
+                Log.d(TAG,email_from); 
+                Log.d(TAG,email_date);
+                Log.d(TAG,email_cc);
+                Log.d(TAG,email_to);
+
                 if (email_json.getJSONArray("attachments").length() > 0) {
 
                     email_attachment1 = ((JSONObject) email_json.getJSONArray("attachments").get(0)).getString("filename");
